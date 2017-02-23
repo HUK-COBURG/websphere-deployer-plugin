@@ -12,6 +12,16 @@ public class Artifact {
     private String appName;
     private String context;
     private String targets;
+
+	public String getVirtualHost() {
+		return virtualHost;
+	}
+
+	public void setVirtualHost(String virtualHost) {
+		this.virtualHost = virtualHost;
+	}
+
+	private String virtualHost;
     private int type;
     private boolean distribute;
     private boolean precompile;

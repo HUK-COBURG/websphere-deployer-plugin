@@ -68,6 +68,9 @@
           	<f:textarea default="WebSphere:cell=[cellname],node=[nodeName],server=[serverName]">
           	</f:textarea>
           </f:entry>
+          <f:entry title="Virtual Host" field="virtualHost">
+            <f:textbox />
+          </f:entry>
           <f:entry title="Deployment Timeout (minutes)" field="deploymentTimeout">
             <f:textbox />
           </f:entry>       
