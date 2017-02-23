@@ -557,8 +557,8 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 						countTrue++;
 					if (distributionState.equals("false"))
 						countFalse++;
-					if (distributionState.equals("unknown"))
-						countUnknown++;
+//					if (distributionState.equals("unknown"))
+//						countUnknown++;
 				}
 				if (countUnknown > 0) {
 					distributionState = AppNotification.DISTRIBUTION_UNKNOWN;
