@@ -69,7 +69,7 @@
           	</f:textarea>
           </f:entry>
           <f:entry title="Virtual Host" field="virtualHost">
-            <f:textbox />
+            <f:textbox default="default_host"/>
           </f:entry>
           <f:entry title="Deployment Timeout (minutes)" field="deploymentTimeout">
             <f:textbox />

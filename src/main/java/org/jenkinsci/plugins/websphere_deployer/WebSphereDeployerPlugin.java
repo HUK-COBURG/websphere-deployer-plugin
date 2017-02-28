@@ -110,7 +110,11 @@ public class WebSphereDeployerPlugin extends Notifier {
         this.classLoaderOrder = classLoaderOrder;
         this.applicationName = applicationName;
     }
-    
+
+    public String getVirtualHost() {
+        return virtualHost;
+    }
+
     public String getClassLoaderOrder() {
     	return classLoaderOrder;
     }

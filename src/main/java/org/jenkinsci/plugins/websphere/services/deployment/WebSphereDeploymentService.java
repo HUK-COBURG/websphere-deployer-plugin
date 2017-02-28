@@ -269,6 +269,8 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
         }
 
         if(artifact.getVirtualHost() != null && !"".equals(artifact.getVirtualHost())) {
+            System.out.println("===================");
+            System.out.println(">>>" + artifact.getVirtualHost());
             preferences.put(AppConstants.APPDEPL_VIRTUAL_HOST, artifact.getVirtualHost());
         }
 
