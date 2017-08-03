@@ -53,6 +53,7 @@ public class WebSphereDeployerPlugin extends Notifier {
     private final String context;
     private final String installPath;
     private final String targets;
+    private final String virtualHost;
     private final String applicationName;
     private final boolean precompile;
     private final boolean reloading;
@@ -75,6 +76,7 @@ public class WebSphereDeployerPlugin extends Notifier {
                                    String operations,
                                    String context,
                                    String targets,
+                                   String virtualHost,
                                    String applicationName,
                                    boolean precompile,
                                    boolean reloading,
@@ -87,6 +89,7 @@ public class WebSphereDeployerPlugin extends Notifier {
                                    String classLoaderOrder) {
     	this.context = context;
     	this.targets = targets;
+        this.virtualHost = virtualHost;
     	this.installPath = installPath;
         this.ipAddress = ipAddress;        
         this.connectorType = connectorType;
@@ -107,7 +110,11 @@ public class WebSphereDeployerPlugin extends Notifier {
         this.classLoaderOrder = classLoaderOrder;
         this.applicationName = applicationName;
     }
-    
+
+    public String getVirtualHost() {
+        return virtualHost;
+    }
+
     public String getClassLoaderOrder() {
     	return classLoaderOrder;
     }
@@ -353,6 +360,7 @@ public class WebSphereDeployerPlugin extends Notifier {
         artifact.setClassLoaderOrder(classLoaderOrder);
         artifact.setClassLoaderPolicy(classLoaderPolicy);
         artifact.setTargets(targets);
+        artifact.setVirtualHost(virtualHost);
         artifact.setInstallPath(installPath);
         artifact.setJspReloading(reloading);
         artifact.setDistribute(distribute);

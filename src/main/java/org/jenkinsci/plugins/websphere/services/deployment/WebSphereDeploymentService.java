@@ -266,7 +266,13 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
         	buildListener.getLogger().println("Setting context root to: "+artifact.getContext());
         	preferences.put(AppConstants.APPDEPL_WEBMODULE_CONTEXTROOT, artifact.getContext());
         	preferences.put(AppConstants.APPDEPL_WEB_CONTEXTROOT, artifact.getContext());
-        }  
+        }
+
+        if(artifact.getVirtualHost() != null && !"".equals(artifact.getVirtualHost())) {
+            System.out.println("===================");
+            System.out.println(">>>" + artifact.getVirtualHost());
+            preferences.put(AppConstants.APPDEPL_VIRTUAL_HOST, artifact.getVirtualHost());
+        }
 
         Hashtable<String,Object> module2server = new Hashtable<String,Object>();
         buildListener.getLogger().println("Deploying to targets: "+getFormattedTargets(artifact.getTargets()));
@@ -557,8 +563,8 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 						countTrue++;
 					if (distributionState.equals("false"))
 						countFalse++;
-					if (distributionState.equals("unknown"))
-						countUnknown++;
+//					if (distributionState.equals("unknown"))
+//						countUnknown++;
 				}
 				if (countUnknown > 0) {
 					distributionState = AppNotification.DISTRIBUTION_UNKNOWN;
