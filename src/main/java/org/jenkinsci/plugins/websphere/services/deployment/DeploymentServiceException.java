@@ -5,11 +5,16 @@ package org.jenkinsci.plugins.websphere.services.deployment;
  */
 public class DeploymentServiceException extends RuntimeException {
 
-    public DeploymentServiceException(String message,Throwable t) {
-        super(message,t);
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    public DeploymentServiceException(String message) {
-        super(message);
-    }
+	public DeploymentServiceException(String message, Throwable t) {
+		super(message, t);
+	}
+
+	public DeploymentServiceException(String message) {
+		super(message);
+	}
 }

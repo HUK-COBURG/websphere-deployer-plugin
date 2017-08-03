@@ -215,5 +215,4 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <groupId>org.jenkins-ci.plugins</groupId>
-</project>
+    </project>
