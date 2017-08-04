@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.jenkinsci.plugins.websphere_deployer;
 
 import java.io.ByteArrayOutputStream;
@@ -33,36 +36,130 @@ import hudson.util.FormValidation;
 import net.sf.json.JSONObject;
 
 /**
- * A Jenkins plugin for deploying to WebSphere either locally or remotely.
+ * A Jenkins plugin for deploying to WebSphere Application Server either locally
+ * or remotely.
  *
  * @author Greg Peters
  */
 public class WebSphereDeployerPlugin extends Notifier {
 
+	/** The Constant OPERATION_REINSTALL. */
 	private final static String OPERATION_REINSTALL = "1";
+
+	/** The ip address. */
 	private final String ipAddress;
+
+	/** The connector type. */
 	private final String connectorType;
+
+	/** The port. */
 	private final String port;
+
+	/** The artifacts. */
 	private final String artifacts;
+
+	/** The ear level. */
 	private final String earLevel;
+
+	/** The deployment timeout. */
 	private final String deploymentTimeout;
+
+	/** The class loader order. */
 	private final String classLoaderOrder;
+
+	/** The class loader policy. */
 	private final String classLoaderPolicy;
+
+	/** The operations. */
 	private final String operations;
+
+	/** The context. */
 	private final String context;
+
+	/** The install path. */
 	private final String installPath;
+
+	/** The targets. */
 	private final String targets;
+
+	/** The virtual host. */
 	private final String virtualHost;
+
+	/** The application name. */
 	private final String applicationName;
+
+	/** The precompile. */
 	private final boolean precompile;
+
+	/** The reloading. */
 	private final boolean reloading;
+
+	/** The jsp reloading. */
 	private final boolean jspReloading;
+
+	/** The verbose. */
 	private final boolean verbose;
+
+	/** The distribute. */
 	private final boolean distribute;
+
+	/** The rollback. */
 	private final boolean rollback;
+
+	/** The unstable deploy. */
 	private final boolean unstableDeploy;
+
+	/** The security. */
 	private final WebSphereSecurity security;
 
+	/**
+	 * Instantiates a new web sphere deployer plugin.
+	 *
+	 * @param ipAddress
+	 *            the ip address
+	 * @param connectorType
+	 *            the connector type
+	 * @param port
+	 *            the port
+	 * @param installPath
+	 *            the install path
+	 * @param security
+	 *            the security
+	 * @param artifacts
+	 *            the artifacts
+	 * @param earLevel
+	 *            the ear level
+	 * @param deploymentTimeout
+	 *            the deployment timeout
+	 * @param operations
+	 *            the operations
+	 * @param context
+	 *            the context
+	 * @param targets
+	 *            the targets
+	 * @param virtualHost
+	 *            the virtual host
+	 * @param applicationName
+	 *            the application name
+	 * @param precompile
+	 *            the precompile
+	 * @param reloading
+	 *            the reloading
+	 * @param jspReloading
+	 *            the jsp reloading
+	 * @param verbose
+	 *            the verbose
+	 * @param distribute
+	 *            the distribute
+	 * @param rollback
+	 *            the rollback
+	 * @param unstableDeploy
+	 *            the unstable deploy
+	 * @param classLoaderPolicy
+	 *            the class loader policy
+	 * @param classLoaderOrder
+	 *            the class loader order
+	 */
 	@DataBoundConstructor
 	public WebSphereDeployerPlugin(String ipAddress, String connectorType, String port, String installPath,
 			WebSphereSecurity security, String artifacts, String earLevel, String deploymentTimeout, String operations,
@@ -93,94 +190,210 @@ public class WebSphereDeployerPlugin extends Notifier {
 		this.applicationName = applicationName;
 	}
 
+	/**
+	 * Gets the virtual host.
+	 *
+	 * @return the virtual host
+	 */
 	public String getVirtualHost() {
 		return virtualHost;
 	}
 
+	/**
+	 * Gets the class loader order.
+	 *
+	 * @return the class loader order
+	 */
 	public String getClassLoaderOrder() {
 		return classLoaderOrder;
 	}
 
+	/**
+	 * Gets the application name.
+	 *
+	 * @return the application name
+	 */
 	public String getApplicationName() {
 		return applicationName;
 	}
 
+	/**
+	 * Gets the class loader policy.
+	 *
+	 * @return the class loader policy
+	 */
 	public String getClassLoaderPolicy() {
 		return classLoaderPolicy;
 	}
 
+	/**
+	 * Gets the targets.
+	 *
+	 * @return the targets
+	 */
 	public String getTargets() {
 		return targets;
 	}
 
+	/**
+	 * Gets the ear level.
+	 *
+	 * @return the ear level
+	 */
 	public String getEarLevel() {
 		return earLevel;
 	}
 
+	/**
+	 * Gets the security.
+	 *
+	 * @return the security
+	 */
 	public WebSphereSecurity getSecurity() {
 		return security;
 	}
 
+	/**
+	 * Checks if is distribute.
+	 *
+	 * @return true, if is distribute
+	 */
 	public boolean isDistribute() {
 		return distribute;
 	}
 
+	/**
+	 * Checks if is precompile.
+	 *
+	 * @return true, if is precompile
+	 */
 	public boolean isPrecompile() {
 		return precompile;
 	}
 
+	/**
+	 * Checks if is reloading.
+	 *
+	 * @return true, if is reloading
+	 */
 	public boolean isReloading() {
 		return reloading;
 	}
 
+	/**
+	 * Checks if is jsp reloading.
+	 *
+	 * @return true, if is jsp reloading
+	 */
 	public boolean isJspReloading() {
 		return jspReloading;
 	}
 
+	/**
+	 * Checks if is verbose.
+	 *
+	 * @return true, if is verbose
+	 */
 	public boolean isVerbose() {
 		return verbose;
 	}
 
+	/**
+	 * Checks if is rollback.
+	 *
+	 * @return true, if is rollback
+	 */
 	public boolean isRollback() {
 		return rollback;
 	}
 
+	/**
+	 * Checks if is unstable deploy.
+	 *
+	 * @return true, if is unstable deploy
+	 */
 	public boolean isUnstableDeploy() {
 		return unstableDeploy;
 	}
 
+	/**
+	 * Gets the ip address.
+	 *
+	 * @return the ip address
+	 */
 	public String getIpAddress() {
 		return ipAddress;
 	}
 
+	/**
+	 * Gets the context.
+	 *
+	 * @return the context
+	 */
 	public String getContext() {
 		return context;
 	}
 
+	/**
+	 * Gets the install path.
+	 *
+	 * @return the install path
+	 */
 	public String getInstallPath() {
 		return installPath;
 	}
 
+	/**
+	 * Gets the connector type.
+	 *
+	 * @return the connector type
+	 */
 	public String getConnectorType() {
 		return connectorType;
 	}
 
+	/**
+	 * Gets the port.
+	 *
+	 * @return the port
+	 */
 	public String getPort() {
 		return port;
 	}
 
+	/**
+	 * Gets the artifacts.
+	 *
+	 * @return the artifacts
+	 */
 	public String getArtifacts() {
 		return artifacts;
 	}
 
+	/**
+	 * Gets the operations.
+	 *
+	 * @return the operations
+	 */
 	public String getOperations() {
 		return operations;
 	}
 
+	/**
+	 * Gets the deployment timeout.
+	 *
+	 * @return the deployment timeout
+	 */
 	public String getDeploymentTimeout() {
 		return deploymentTimeout;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hudson.tasks.BuildStepCompatibilityLayer#perform(hudson.model.
+	 * AbstractBuild, hudson.Launcher, hudson.model.BuildListener)
+	 */
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
 		if (shouldDeploy(build.getResult())) {
@@ -232,6 +445,13 @@ public class WebSphereDeployerPlugin extends Notifier {
 		return true;
 	}
 
+	/**
+	 * Should deploy.
+	 *
+	 * @param result
+	 *            the result
+	 * @return true, if successful
+	 */
 	private boolean shouldDeploy(Result result) {
 		if (result.equals(Result.SUCCESS))
 			return true;
@@ -240,16 +460,44 @@ public class WebSphereDeployerPlugin extends Notifier {
 		return false;
 	}
 
+	/**
+	 * Log.
+	 *
+	 * @param listener
+	 *            the listener
+	 * @param data
+	 *            the data
+	 */
 	private void log(BuildListener listener, String data) {
 		listener.getLogger().println(data);
 	}
 
+	/**
+	 * Log verbose.
+	 *
+	 * @param listener
+	 *            the listener
+	 * @param data
+	 *            the data
+	 */
 	private void logVerbose(BuildListener listener, String data) {
 		if (verbose) {
 			log(listener, data);
 		}
 	}
 
+	/**
+	 * Rollback artifact.
+	 *
+	 * @param service
+	 *            the service
+	 * @param build
+	 *            the build
+	 * @param listener
+	 *            the listener
+	 * @param artifact
+	 *            the artifact
+	 */
 	private void rollbackArtifact(WebSphereDeploymentService service, AbstractBuild<?, ?> build, BuildListener listener,
 			Artifact artifact) {
 		if (artifact == null) {
@@ -274,7 +522,18 @@ public class WebSphereDeployerPlugin extends Notifier {
 		}
 	}
 
-	private void saveArtifactToRollbackRepository(AbstractBuild<?, ?> build, BuildListener listener, Artifact artifact) {
+	/**
+	 * Save artifact to rollback repository.
+	 *
+	 * @param build
+	 *            the build
+	 * @param listener
+	 *            the listener
+	 * @param artifact
+	 *            the artifact
+	 */
+	private void saveArtifactToRollbackRepository(AbstractBuild<?, ?> build, BuildListener listener,
+			Artifact artifact) {
 		listener.getLogger()
 				.println("Performing save operations on '" + artifact.getAppName() + "' for future rollbacks");
 		File rollbackDir = new File(build.getWorkspace().getRemote() + File.separator + "Rollbacks");
@@ -296,6 +555,12 @@ public class WebSphereDeployerPlugin extends Notifier {
 		}
 	}
 
+	/**
+	 * Creates the if not exists.
+	 *
+	 * @param directory
+	 *            the directory
+	 */
 	private void createIfNotExists(File directory) {
 		if (directory.exists() || directory.mkdir()) {
 			return;
@@ -304,12 +569,36 @@ public class WebSphereDeployerPlugin extends Notifier {
 				"Failed to create directory, is write access allowed?: " + directory.getAbsolutePath());
 	}
 
+	/**
+	 * Deploy artifact.
+	 *
+	 * @param artifact
+	 *            the artifact
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void deployArtifact(Artifact artifact, BuildListener listener, WebSphereDeploymentService service)
 			throws Exception {
 		listener.getLogger().println("Deploying '" + artifact.getAppName() + "' to IBM WebSphere Application Server");
 		service.installArtifact(artifact);
 	}
 
+	/**
+	 * Uninstall artifact.
+	 *
+	 * @param appName
+	 *            the app name
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void uninstallArtifact(String appName, BuildListener listener, WebSphereDeploymentService service)
 			throws Exception {
 		if (service.isArtifactInstalled(appName)) {
@@ -318,6 +607,18 @@ public class WebSphereDeployerPlugin extends Notifier {
 		}
 	}
 
+	/**
+	 * Start artifact.
+	 *
+	 * @param appName
+	 *            the app name
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void startArtifact(String appName, BuildListener listener, WebSphereDeploymentService service)
 			throws Exception {
 		listener.getLogger().println("Starting Application '" + appName + "'...");
@@ -328,6 +629,18 @@ public class WebSphereDeployerPlugin extends Notifier {
 		}
 	}
 
+	/**
+	 * Stop artifact.
+	 *
+	 * @param appName
+	 *            the app name
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void stopArtifact(String appName, BuildListener listener, WebSphereDeploymentService service)
 			throws Exception {
 		if (service.isArtifactInstalled(appName)) {
@@ -336,6 +649,18 @@ public class WebSphereDeployerPlugin extends Notifier {
 		}
 	}
 
+	/**
+	 * Update artifact.
+	 *
+	 * @param artifact
+	 *            the artifact
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void updateArtifact(Artifact artifact, BuildListener listener, WebSphereDeploymentService service)
 			throws Exception {
 		if (service.isArtifactInstalled(artifact.getAppName())) {
@@ -345,6 +670,17 @@ public class WebSphereDeployerPlugin extends Notifier {
 		}
 	}
 
+	/**
+	 * Creates the artifact.
+	 *
+	 * @param path
+	 *            the path
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @return the artifact
+	 */
 	private Artifact createArtifact(FilePath path, BuildListener listener, WebSphereDeploymentService service) {
 		Artifact artifact = new Artifact();
 		if (path.getRemote().endsWith(".ear")) {
@@ -375,6 +711,17 @@ public class WebSphereDeployerPlugin extends Notifier {
 		return artifact;
 	}
 
+	/**
+	 * Gather artifact paths.
+	 *
+	 * @param build
+	 *            the build
+	 * @param listener
+	 *            the listener
+	 * @return the file path[]
+	 * @throws Exception
+	 *             the exception
+	 */
 	private FilePath[] gatherArtifactPaths(AbstractBuild<?, ?> build, BuildListener listener) throws Exception {
 		FilePath[] paths = build.getWorkspace().getParent().list(getArtifacts());
 		if (paths.length == 0) {
@@ -393,6 +740,18 @@ public class WebSphereDeployerPlugin extends Notifier {
 		return paths;
 	}
 
+	/**
+	 * Pre initialize service.
+	 *
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @param env
+	 *            the env
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void preInitializeService(BuildListener listener, WebSphereDeploymentService service, EnvVars env)
 			throws Exception {
 		listener.getLogger().println("Connecting to IBM WebSphere Application Server...");
@@ -412,6 +771,15 @@ public class WebSphereDeployerPlugin extends Notifier {
 		}
 	}
 
+	/**
+	 * Gets the app name.
+	 *
+	 * @param artifact
+	 *            the artifact
+	 * @param service
+	 *            the service
+	 * @return the app name
+	 */
 	private String getAppName(Artifact artifact, WebSphereDeploymentService service) {
 		if (artifact.getType() == Artifact.TYPE_EAR) {
 			return service.getAppName(artifact.getSourcePath().getAbsolutePath());
@@ -421,6 +789,16 @@ public class WebSphereDeployerPlugin extends Notifier {
 		}
 	}
 
+	/**
+	 * Generate EAR.
+	 *
+	 * @param artifact
+	 *            the artifact
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 */
 	private void generateEAR(Artifact artifact, BuildListener listener, WebSphereDeploymentService service) {
 		listener.getLogger().println("Generating EAR For Artifact: " + artifact.getAppName());
 		File modified = new File(artifact.getSourcePath().getParent(), artifact.getAppName() + ".ear");
@@ -428,25 +806,71 @@ public class WebSphereDeployerPlugin extends Notifier {
 		artifact.setSourcePath(modified);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hudson.tasks.Notifier#getDescriptor()
+	 */
 	@Override
 	public DescriptorImpl getDescriptor() {
 		return (DescriptorImpl) super.getDescriptor();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hudson.tasks.BuildStep#getRequiredMonitorService()
+	 */
 	public BuildStepMonitor getRequiredMonitorService() {
 		return BuildStepMonitor.BUILD;
 	}
 
+	/**
+	 * The Class DescriptorImpl.
+	 */
 	@Extension
 	public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
+		/** The admin client path. */
 		private String adminClientPath;
+
+		/** The orb client path. */
 		private String orbClientPath;
 
+		/**
+		 * Instantiates a new descriptor impl.
+		 */
 		public DescriptorImpl() {
 			load();
 		}
 
+		/**
+		 * Do test connection.
+		 *
+		 * @param ipAddress
+		 *            the ip address
+		 * @param connectorType
+		 *            the connector type
+		 * @param port
+		 *            the port
+		 * @param username
+		 *            the username
+		 * @param password
+		 *            the password
+		 * @param clientKeyFile
+		 *            the client key file
+		 * @param clientTrustFile
+		 *            the client trust file
+		 * @param clientKeyPassword
+		 *            the client key password
+		 * @param clientTrustPassword
+		 *            the client trust password
+		 * @return the form validation
+		 * @throws IOException
+		 *             Signals that an I/O exception has occurred.
+		 * @throws ServletException
+		 *             the servlet exception
+		 */
 		public FormValidation doTestConnection(@QueryParameter("ipAddress") String ipAddress,
 				@QueryParameter("connectorType") String connectorType, @QueryParameter("port") String port,
 				@QueryParameter("username") String username, @QueryParameter("password") String password,
@@ -486,6 +910,17 @@ public class WebSphereDeployerPlugin extends Notifier {
 			}
 		}
 
+		/**
+		 * Do check port.
+		 *
+		 * @param value
+		 *            the value
+		 * @return the form validation
+		 * @throws IOException
+		 *             Signals that an I/O exception has occurred.
+		 * @throws ServletException
+		 *             the servlet exception
+		 */
 		public FormValidation doCheckPort(@QueryParameter String value) throws IOException, ServletException {
 			if (value.length() == 0)
 				return FormValidation.error("Select a port");
@@ -494,6 +929,17 @@ public class WebSphereDeployerPlugin extends Notifier {
 			return FormValidation.ok();
 		}
 
+		/**
+		 * Do check application name.
+		 *
+		 * @param value
+		 *            the value
+		 * @return the form validation
+		 * @throws IOException
+		 *             Signals that an I/O exception has occurred.
+		 * @throws ServletException
+		 *             the servlet exception
+		 */
 		public FormValidation doCheckApplicationName(@QueryParameter String value)
 				throws IOException, ServletException {
 			if (StringUtils.trimToNull(value) == null) {
@@ -503,6 +949,17 @@ public class WebSphereDeployerPlugin extends Notifier {
 			}
 		}
 
+		/**
+		 * Do check admin client path.
+		 *
+		 * @param value
+		 *            the value
+		 * @return the form validation
+		 * @throws IOException
+		 *             Signals that an I/O exception has occurred.
+		 * @throws ServletException
+		 *             the servlet exception
+		 */
 		public FormValidation doCheckAdminClientPath(@QueryParameter String value)
 				throws IOException, ServletException {
 			if (!new File(value).exists()) {
@@ -511,6 +968,17 @@ public class WebSphereDeployerPlugin extends Notifier {
 			return FormValidation.ok();
 		}
 
+		/**
+		 * Do check orb client path.
+		 *
+		 * @param value
+		 *            the value
+		 * @return the form validation
+		 * @throws IOException
+		 *             Signals that an I/O exception has occurred.
+		 * @throws ServletException
+		 *             the servlet exception
+		 */
 		public FormValidation doCheckOrbClientPath(@QueryParameter String value) throws IOException, ServletException {
 			if (!new File(value).exists()) {
 				return FormValidation.error("Path '" + value + "' is not found");
@@ -518,15 +986,32 @@ public class WebSphereDeployerPlugin extends Notifier {
 			return FormValidation.ok();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see hudson.tasks.BuildStepDescriptor#isApplicable(java.lang.Class)
+		 */
 		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
 			return true;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see hudson.model.Descriptor#getDisplayName()
+		 */
 		@Override
 		public String getDisplayName() {
 			return "Deploy To IBM WebSphere Application Server";
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * hudson.model.Descriptor#configure(org.kohsuke.stapler.StaplerRequest,
+		 * net.sf.json.JSONObject)
+		 */
 		@Override
 		public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
 			adminClientPath = formData.getString("adminClientPath");
@@ -535,10 +1020,20 @@ public class WebSphereDeployerPlugin extends Notifier {
 			return super.configure(req, formData);
 		}
 
+		/**
+		 * Gets the admin client path.
+		 *
+		 * @return the admin client path
+		 */
 		public String getAdminClientPath() {
 			return adminClientPath;
 		}
 
+		/**
+		 * Gets the orb client path.
+		 *
+		 * @return the orb client path
+		 */
 		public String getOrbClientPath() {
 			return orbClientPath;
 		}

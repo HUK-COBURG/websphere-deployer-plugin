@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.jenkinsci.plugins.websphere.services.deployment;
 
 import java.io.File;
@@ -44,17 +47,31 @@ import com.ibm.websphere.management.exception.ConnectorException;
 import hudson.model.BuildListener;
 
 /**
+ * The Class WebSphereDeploymentService.
+ *
  * @author Greg Peters
  */
 public class WebSphereDeploymentService extends AbstractDeploymentService {
 
+	/** The Constant CONNECTOR_TYPE_SOAP. */
 	public static final String CONNECTOR_TYPE_SOAP = "SOAP";
+
+	/** The Constant CLASSNAME. */
 	private static final String CLASSNAME = WebSphereDeploymentService.class.getName();
+
+	/** The log. */
 	private static Logger log = Logger.getLogger(CLASSNAME);
 
+	/** The client. */
 	private AdminClient client;
+
+	/** The connector type. */
 	private String connectorType;
+
+	/** The verbose. */
 	private boolean verbose;
+
+	/** The build listener. */
 	private BuildListener buildListener;
 	/**
 	 * This is used to prevent weird behaviors caused by IBM wsadmin that
@@ -66,6 +83,11 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 	 */
 	private Properties storedProperties;
 
+	/**
+	 * List servers.
+	 *
+	 * @return the list
+	 */
 	public List<Server> listServers() {
 		try {
 			if (!isConnected()) {
@@ -104,6 +126,16 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/**
+	 * Generate EAR.
+	 *
+	 * @param artifact
+	 *            the artifact
+	 * @param destination
+	 *            the destination
+	 * @param earLevel
+	 *            the ear level
+	 */
 	public void generateEAR(Artifact artifact, File destination, String earLevel) {
 		byte[] buf = new byte[1024];
 		try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(destination));
@@ -126,6 +158,13 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/**
+	 * Gets the context root.
+	 *
+	 * @param artifact
+	 *            the artifact
+	 * @return the context root
+	 */
 	/*
 	 * This method tries to read ibm-web-ext.xml and extract the value of
 	 * context-root. If any exception is thrown, it will fall back to the WAR
@@ -160,11 +199,27 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/**
+	 * Gets the context root from war name.
+	 *
+	 * @param artifact
+	 *            the artifact
+	 * @return the context root from war name
+	 */
 	private String getContextRootFromWarName(Artifact artifact) {
 		String warName = artifact.getSourcePath().getName();
 		return warName.substring(0, warName.lastIndexOf('.'));
 	}
 
+	/**
+	 * Gets the application XML.
+	 *
+	 * @param artifact
+	 *            the artifact
+	 * @param earLevel
+	 *            the ear level
+	 * @return the application XML
+	 */
 	private String getApplicationXML(Artifact artifact, String earLevel) {
 		String contextRoot = getContextRoot(artifact);
 		String warName = artifact.getSourcePath().getName();
@@ -181,6 +236,13 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 				+ "</application>";
 	}
 
+	/**
+	 * Gets the schema version.
+	 *
+	 * @param earLevel
+	 *            the ear level
+	 * @return the schema version
+	 */
 	private String getSchemaVersion(String earLevel) {
 		if (earLevel == "7") {
 			return "xsi:schemaLocation=\"http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/application_"
@@ -191,10 +253,24 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/**
+	 * Gets the app name.
+	 *
+	 * @param path
+	 *            the path
+	 * @return the app name
+	 */
 	public String getAppName(String path) {
 		return getAppName(new File(path));
 	}
 
+	/**
+	 * Gets the app name.
+	 *
+	 * @param file
+	 *            the file
+	 * @return the app name
+	 */
 	public String getAppName(File file) {
 		try {
 			Hashtable<String, Object> preferences = new Hashtable<String, Object>();
@@ -221,6 +297,15 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/**
+	 * Builds the deployment preferences.
+	 *
+	 * @param artifact
+	 *            the artifact
+	 * @return the hashtable
+	 * @throws Exception
+	 *             the exception
+	 */
 	private Hashtable<String, Object> buildDeploymentPreferences(Artifact artifact) throws Exception {
 		Hashtable<String, Object> preferences = new Hashtable<String, Object>();
 		preferences.put(AppConstants.APPDEPL_LOCALE, Locale.getDefault());
@@ -283,6 +368,14 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		return preferences;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * installArtifact(org.jenkinsci.plugins.websphere.services.deployment.
+	 * Artifact)
+	 */
 	public void installArtifact(Artifact artifact) {
 		if (!isConnected()) {
 			throw new DeploymentServiceException(
@@ -312,6 +405,14 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * updateArtifact(org.jenkinsci.plugins.websphere.services.deployment.
+	 * Artifact)
+	 */
 	public void updateArtifact(Artifact artifact) {
 		if (!isConnected()) {
 			throw new DeploymentServiceException(
@@ -343,6 +444,13 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * uninstallArtifact(java.lang.String)
+	 */
 	public void uninstallArtifact(String appName) throws Exception {
 		try {
 			Hashtable<Object, Object> prefs = new Hashtable<Object, Object>();
@@ -367,10 +475,27 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * startArtifact(java.lang.String)
+	 */
 	public void startArtifact(String appName) throws Exception {
 		startArtifact(appName, 5);
 	}
 
+	/**
+	 * Start artifact.
+	 *
+	 * @param appName
+	 *            the app name
+	 * @param deploymentTimeout
+	 *            the deployment timeout
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void startArtifact(String appName, int deploymentTimeout) throws Exception {
 		try {
 			AppManagement appManagementProxy = AppManagementProxy.getJMXProxyForClient(getAdminClient());
@@ -393,6 +518,19 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/**
+	 * Wait for application distribution.
+	 *
+	 * @param appManagementProxy
+	 *            the app management proxy
+	 * @param appName
+	 *            the app name
+	 * @param secondsToWait
+	 *            the seconds to wait
+	 * @return true, if successful
+	 * @throws Exception
+	 *             the exception
+	 */
 	private boolean waitForApplicationDistribution(AppManagement appManagementProxy, String appName, int secondsToWait)
 			throws Exception {
 		int totalSeconds = 0;
@@ -412,6 +550,13 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		return totalSeconds <= secondsToWait;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * stopArtifact(java.lang.String)
+	 */
 	public void stopArtifact(String appName) throws Exception {
 		try {
 			AppManagementProxy.getJMXProxyForClient(getAdminClient()).stopApplication(appName,
@@ -422,6 +567,13 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * isArtifactInstalled(java.lang.String)
+	 */
 	public boolean isArtifactInstalled(String name) {
 		try {
 			buildListener.getLogger().println("Checking if app, looking up JMX interface...");
@@ -446,12 +598,22 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/**
+	 * Creates the filter support.
+	 *
+	 * @return the notification filter support
+	 */
 	private NotificationFilterSupport createFilterSupport() {
 		NotificationFilterSupport filterSupport = new NotificationFilterSupport();
 		filterSupport.enableType(AppConstants.NotificationType);
 		return filterSupport;
 	}
 
+	/**
+	 * Checks if is connected.
+	 *
+	 * @return true, if is connected
+	 */
 	public boolean isConnected() {
 		try {
 			return client != null && client.isAlive() != null;
@@ -460,6 +622,13 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * connect()
+	 */
 	public void connect() throws Exception {
 		// store the current environment, before that wsadmin client overrides
 		// it
@@ -481,6 +650,13 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * disconnect()
+	 */
 	public void disconnect() {
 		// restore environment after execution
 		if (storedProperties != null) {
@@ -493,6 +669,13 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * isAvailable()
+	 */
 	public boolean isAvailable() {
 		try {
 			Class.forName("com.ibm.websphere.management.AdminClientFactory", false, getClass().getClassLoader());
@@ -502,6 +685,11 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/**
+	 * Gets the admin client.
+	 *
+	 * @return the admin client
+	 */
 	private AdminClient getAdminClient() {
 		if (client == null) {
 			throw new DeploymentServiceException("No connection to WebSphere exists");
@@ -509,6 +697,12 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		return client;
 	}
 
+	/**
+	 * Inject security configuration.
+	 *
+	 * @param config
+	 *            the config
+	 */
 	private void injectSecurityConfiguration(Properties config) {
 		config.put(AdminClient.CACHE_DISABLED, "true");
 		config.put(AdminClient.CONNECTOR_SECURITY_ENABLED, "true");
@@ -536,6 +730,13 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/**
+	 * Gets the formatted targets.
+	 *
+	 * @param targets
+	 *            the targets
+	 * @return the formatted targets
+	 */
 	private String getFormattedTargets(String targets) {
 		List<String> result = new ArrayList<String>();
 		for (StringTokenizer st = new StringTokenizer(targets.trim(), "\r\n"); st.hasMoreTokens();) {
@@ -544,6 +745,13 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		return StringUtils.join(result, "+");
 	}
 
+	/**
+	 * Gets the formatted target.
+	 *
+	 * @param target
+	 *            the target
+	 * @return the formatted target
+	 */
 	private String getFormattedTarget(String target) {
 		target = target.replace("WebSphere:", "").replace(",j2eeType=J2EEServer", ""); // remove
 																						// 'WebSphere:'
@@ -560,22 +768,54 @@ public class WebSphereDeploymentService extends AbstractDeploymentService {
 		return "WebSphere:" + StringUtils.join(elements, ",");
 	}
 
+	/**
+	 * Sets the connector type.
+	 *
+	 * @param type
+	 *            the new connector type
+	 */
 	public void setConnectorType(String type) {
 		this.connectorType = type;
 	}
 
+	/**
+	 * Gets the connector type.
+	 *
+	 * @return the connector type
+	 */
 	public String getConnectorType() {
 		return this.connectorType;
 	}
 
+	/**
+	 * Sets the verbose.
+	 *
+	 * @param verbose
+	 *            the new verbose
+	 */
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
 	}
 
+	/**
+	 * Sets the builds the listener.
+	 *
+	 * @param listener
+	 *            the new builds the listener
+	 */
 	public void setBuildListener(BuildListener listener) {
 		this.buildListener = listener;
 	}
 
+	/**
+	 * Check distribution status.
+	 *
+	 * @param listener
+	 *            the listener
+	 * @return the string
+	 * @throws MalformedObjectNameException
+	 *             the malformed object name exception
+	 */
 	/*
 	 * Checks the listener and figures out the aggregate distribution status of
 	 * all nodes

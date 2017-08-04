@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.jenkinsci.plugins.websphere_deployer;
 
 import java.io.ByteArrayOutputStream;
@@ -29,18 +32,52 @@ import hudson.util.Scrambler;
 import net.sf.json.JSONObject;
 
 /**
+ * A Jenkins plugin for deploying to WebSphere Liberty Server either locally or
+ * remotely.
+ *
  * @author Greg Peters
  */
 public class LibertyDeployerPlugin extends Notifier {
 
+	/** The ip address. */
 	private final String ipAddress;
+
+	/** The port. */
 	private final String port;
+
+	/** The username. */
 	private final String username;
+
+	/** The console password. */
 	private final String consolePassword;
+
+	/** The client trust file. */
 	private final String clientTrustFile;
+
+	/** The client trust password. */
 	private final String clientTrustPassword;
+
+	/** The artifacts. */
 	private final String artifacts;
 
+	/**
+	 * Instantiates a new liberty deployer plugin.
+	 *
+	 * @param ipAddress
+	 *            the ip address
+	 * @param port
+	 *            the port
+	 * @param username
+	 *            the username
+	 * @param consolePassword
+	 *            the console password
+	 * @param clientTrustFile
+	 *            the client trust file
+	 * @param clientTrustPassword
+	 *            the client trust password
+	 * @param artifacts
+	 *            the artifacts
+	 */
 	@DataBoundConstructor
 	public LibertyDeployerPlugin(String ipAddress, String port, String username, String consolePassword,
 			String clientTrustFile, String clientTrustPassword, String artifacts) {
@@ -53,34 +90,75 @@ public class LibertyDeployerPlugin extends Notifier {
 		this.artifacts = artifacts;
 	}
 
+	/**
+	 * Gets the ip address.
+	 *
+	 * @return the ip address
+	 */
 	public String getIpAddress() {
 		return ipAddress;
 	}
 
+	/**
+	 * Gets the port.
+	 *
+	 * @return the port
+	 */
 	public String getPort() {
 		return port;
 	}
 
+	/**
+	 * Gets the username.
+	 *
+	 * @return the username
+	 */
 	public String getUsername() {
 		return username;
 	}
 
+	/**
+	 * Gets the console password.
+	 *
+	 * @return the console password
+	 */
 	public String getConsolePassword() {
 		return Scrambler.descramble(consolePassword);
 	}
 
+	/**
+	 * Gets the client trust file.
+	 *
+	 * @return the client trust file
+	 */
 	public String getClientTrustFile() {
 		return clientTrustFile;
 	}
 
+	/**
+	 * Gets the client trust password.
+	 *
+	 * @return the client trust password
+	 */
 	public String getClientTrustPassword() {
 		return Scrambler.descramble(clientTrustPassword);
 	}
 
+	/**
+	 * Gets the artifacts.
+	 *
+	 * @return the artifacts
+	 */
 	public String getArtifacts() {
 		return artifacts;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hudson.tasks.BuildStepCompatibilityLayer#perform(hudson.model.
+	 * AbstractBuild, hudson.Launcher, hudson.model.BuildListener)
+	 */
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
 
@@ -115,6 +193,13 @@ public class LibertyDeployerPlugin extends Notifier {
 		return true;
 	}
 
+	/**
+	 * Creates the artifact.
+	 *
+	 * @param path
+	 *            the path
+	 * @return the artifact
+	 */
 	private Artifact createArtifact(FilePath path) {
 		Artifact artifact = new Artifact();
 		if (path.getRemote().endsWith(".ear")) {
@@ -131,6 +216,16 @@ public class LibertyDeployerPlugin extends Notifier {
 		return artifact;
 	}
 
+	/**
+	 * Connect.
+	 *
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void connect(BuildListener listener, LibertyDeploymentService service) throws Exception {
 		listener.getLogger().println("Connecting to IBM WebSphere Liberty Profile...");
 		service.setHost(getIpAddress());
@@ -142,11 +237,33 @@ public class LibertyDeployerPlugin extends Notifier {
 		service.connect();
 	}
 
+	/**
+	 * Disconnect.
+	 *
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void disconnect(BuildListener listener, LibertyDeploymentService service) throws Exception {
 		listener.getLogger().println("Disconnecting from IBM WebSphere Liberty Profile...");
 		service.disconnect();
 	}
 
+	/**
+	 * Stop artifact.
+	 *
+	 * @param appName
+	 *            the app name
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void stopArtifact(String appName, BuildListener listener, LibertyDeploymentService service)
 			throws Exception {
 		if (service.isArtifactInstalled(appName)) {
@@ -155,6 +272,18 @@ public class LibertyDeployerPlugin extends Notifier {
 		}
 	}
 
+	/**
+	 * Uninstall artifact.
+	 *
+	 * @param appName
+	 *            the app name
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void uninstallArtifact(String appName, BuildListener listener, LibertyDeploymentService service)
 			throws Exception {
 		if (service.isArtifactInstalled(appName)) {
@@ -163,18 +292,53 @@ public class LibertyDeployerPlugin extends Notifier {
 		}
 	}
 
+	/**
+	 * Deploy artifact.
+	 *
+	 * @param artifact
+	 *            the artifact
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void deployArtifact(Artifact artifact, BuildListener listener, LibertyDeploymentService service)
 			throws Exception {
 		listener.getLogger().println("Deploying '" + artifact.getAppName() + "' to IBM WebSphere Liberty Profile");
 		service.installArtifact(artifact);
 	}
 
+	/**
+	 * Start artifact.
+	 *
+	 * @param appName
+	 *            the app name
+	 * @param listener
+	 *            the listener
+	 * @param service
+	 *            the service
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void startArtifact(String appName, BuildListener listener, LibertyDeploymentService service)
 			throws Exception {
 		listener.getLogger().println("Starting Application '" + appName + "'...");
 		service.startArtifact(appName);
 	}
 
+	/**
+	 * Gather artifact paths.
+	 *
+	 * @param build
+	 *            the build
+	 * @param listener
+	 *            the listener
+	 * @return the file path[]
+	 * @throws Exception
+	 *             the exception
+	 */
 	private FilePath[] gatherArtifactPaths(AbstractBuild<?, ?> build, BuildListener listener) throws Exception {
 		FilePath[] paths = build.getWorkspace().getParent().list(getArtifacts());
 		if (paths.length == 0) {
@@ -192,22 +356,59 @@ public class LibertyDeployerPlugin extends Notifier {
 		return paths;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hudson.tasks.Notifier#getDescriptor()
+	 */
 	@Override
 	public DescriptorImpl getDescriptor() {
 		return (DescriptorImpl) super.getDescriptor();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hudson.tasks.BuildStep#getRequiredMonitorService()
+	 */
 	public BuildStepMonitor getRequiredMonitorService() {
 		return BuildStepMonitor.BUILD;
 	}
 
+	/**
+	 * The Class DescriptorImpl.
+	 */
 	@Extension
 	public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
+		/**
+		 * Instantiates a new descriptor impl.
+		 */
 		public DescriptorImpl() {
 			load();
 		}
 
+		/**
+		 * Do test connection.
+		 *
+		 * @param ipAddress
+		 *            the ip address
+		 * @param port
+		 *            the port
+		 * @param username
+		 *            the username
+		 * @param password
+		 *            the password
+		 * @param clientTrustFile
+		 *            the client trust file
+		 * @param clientTrustPassword
+		 *            the client trust password
+		 * @return the form validation
+		 * @throws IOException
+		 *             Signals that an I/O exception has occurred.
+		 * @throws ServletException
+		 *             the servlet exception
+		 */
 		public FormValidation doTestConnection(@QueryParameter("ipAddress") String ipAddress,
 				@QueryParameter("port") String port, @QueryParameter("username") String username,
 				@QueryParameter("consolePassword") String password,
@@ -243,15 +444,32 @@ public class LibertyDeployerPlugin extends Notifier {
 
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see hudson.tasks.BuildStepDescriptor#isApplicable(java.lang.Class)
+		 */
 		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
 			return true;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see hudson.model.Descriptor#getDisplayName()
+		 */
 		@Override
 		public String getDisplayName() {
 			return "Deploy To IBM WebSphere Liberty Profile";
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * hudson.model.Descriptor#configure(org.kohsuke.stapler.StaplerRequest,
+		 * net.sf.json.JSONObject)
+		 */
 		@Override
 		public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
 			save();

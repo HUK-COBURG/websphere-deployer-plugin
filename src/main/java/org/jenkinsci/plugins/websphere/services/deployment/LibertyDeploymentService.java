@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package org.jenkinsci.plugins.websphere.services.deployment;
 
 import java.io.IOException;
@@ -14,14 +17,29 @@ import com.ibm.websphere.application.ApplicationMBean;
 import com.ibm.websphere.filetransfer.FileTransferMBean;
 
 /**
+ * The Class LibertyDeploymentService.
+ *
  * @author Greg Peters
  */
 public class LibertyDeploymentService extends AbstractDeploymentService {
 
+	/** The Constant WEB_SPHERE_SERVICE_M_BEAN_NAME. */
 	private static final String WEB_SPHERE_SERVICE_M_BEAN_NAME = "WebSphere:service=com.ibm.websphere.application.ApplicationMBean,name=";
+
+	/** The connector. */
 	private JMXConnector connector;
+
+	/** The client. */
 	private MBeanServerConnection client;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * installArtifact(org.jenkinsci.plugins.websphere.services.deployment.
+	 * Artifact)
+	 */
 	public void installArtifact(Artifact artifact) {
 		try {
 			ObjectName fileTransferServiceMBean = new ObjectName(
@@ -38,6 +56,13 @@ public class LibertyDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * uninstallArtifact(java.lang.String)
+	 */
 	public void uninstallArtifact(String name) {
 		try {
 			ObjectName fileTransferServiceMBean = new ObjectName(
@@ -53,10 +78,16 @@ public class LibertyDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * startArtifact(java.lang.String)
+	 */
 	public void startArtifact(String name) {
 		try {
-			ObjectName applicationMBean = new ObjectName(
-					WEB_SPHERE_SERVICE_M_BEAN_NAME + name);
+			ObjectName applicationMBean = new ObjectName(WEB_SPHERE_SERVICE_M_BEAN_NAME + name);
 			if (client.isRegistered(applicationMBean)) {
 				ApplicationMBean bean = JMX.newMBeanProxy(client, applicationMBean, ApplicationMBean.class);
 				bean.start();
@@ -68,10 +99,16 @@ public class LibertyDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * stopArtifact(java.lang.String)
+	 */
 	public void stopArtifact(String name) {
 		try {
-			ObjectName applicationMBean = new ObjectName(
-					WEB_SPHERE_SERVICE_M_BEAN_NAME + name);
+			ObjectName applicationMBean = new ObjectName(WEB_SPHERE_SERVICE_M_BEAN_NAME + name);
 			if (client.isRegistered(applicationMBean)) {
 				ApplicationMBean bean = JMX.newMBeanProxy(client, applicationMBean, ApplicationMBean.class);
 				bean.stop();
@@ -83,10 +120,16 @@ public class LibertyDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * isArtifactInstalled(java.lang.String)
+	 */
 	public boolean isArtifactInstalled(String name) {
 		try {
-			ObjectName applicationMBean = new ObjectName(
-					WEB_SPHERE_SERVICE_M_BEAN_NAME + name);
+			ObjectName applicationMBean = new ObjectName(WEB_SPHERE_SERVICE_M_BEAN_NAME + name);
 			return client.isRegistered(applicationMBean);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,6 +137,13 @@ public class LibertyDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * connect()
+	 */
 	public void connect() throws Exception {
 		ClassLoader loader = getClass().getClassLoader();
 		if (loader.toString().startsWith("AntClassLoader")) { // for development
@@ -120,6 +170,13 @@ public class LibertyDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * disconnect()
+	 */
 	public void disconnect() {
 		if (connector != null) {
 			try {
@@ -132,6 +189,13 @@ public class LibertyDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * isAvailable()
+	 */
 	public boolean isAvailable() {
 		try {
 			Class.forName("com.ibm.ws.jmx.connector.client.rest.ClientProvider", false, getClass().getClassLoader());
@@ -141,10 +205,23 @@ public class LibertyDeploymentService extends AbstractDeploymentService {
 		}
 	}
 
+	/**
+	 * Checks if is connected.
+	 *
+	 * @return true, if is connected
+	 */
 	public boolean isConnected() {
 		return connector != null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jenkinsci.plugins.websphere.services.deployment.DeploymentService#
+	 * updateArtifact(org.jenkinsci.plugins.websphere.services.deployment.
+	 * Artifact)
+	 */
 	@Override
 	public void updateArtifact(Artifact artifact) {
 		throw new UnsupportedOperationException();
