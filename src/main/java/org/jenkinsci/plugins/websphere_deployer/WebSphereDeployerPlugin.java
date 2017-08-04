@@ -182,7 +182,7 @@ public class WebSphereDeployerPlugin extends Notifier {
 	}
 
 	@Override
-	public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
+	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
 		if (shouldDeploy(build.getResult())) {
 			WebSphereDeploymentService service = new WebSphereDeploymentService();
 			Artifact artifact = null;
@@ -250,7 +250,7 @@ public class WebSphereDeployerPlugin extends Notifier {
 		}
 	}
 
-	private void rollbackArtifact(WebSphereDeploymentService service, AbstractBuild build, BuildListener listener,
+	private void rollbackArtifact(WebSphereDeploymentService service, AbstractBuild<?, ?> build, BuildListener listener,
 			Artifact artifact) {
 		if (artifact == null) {
 			log(listener, "Cannot rollback to previous version: artifact is null");
@@ -274,7 +274,7 @@ public class WebSphereDeployerPlugin extends Notifier {
 		}
 	}
 
-	private void saveArtifactToRollbackRepository(AbstractBuild build, BuildListener listener, Artifact artifact) {
+	private void saveArtifactToRollbackRepository(AbstractBuild<?, ?> build, BuildListener listener, Artifact artifact) {
 		listener.getLogger()
 				.println("Performing save operations on '" + artifact.getAppName() + "' for future rollbacks");
 		File rollbackDir = new File(build.getWorkspace().getRemote() + File.separator + "Rollbacks");
@@ -375,7 +375,7 @@ public class WebSphereDeployerPlugin extends Notifier {
 		return artifact;
 	}
 
-	private FilePath[] gatherArtifactPaths(AbstractBuild build, BuildListener listener) throws Exception {
+	private FilePath[] gatherArtifactPaths(AbstractBuild<?, ?> build, BuildListener listener) throws Exception {
 		FilePath[] paths = build.getWorkspace().getParent().list(getArtifacts());
 		if (paths.length == 0) {
 			listener.getLogger().println("No deployable artifacts found in path: " + build.getWorkspace().getParent()
