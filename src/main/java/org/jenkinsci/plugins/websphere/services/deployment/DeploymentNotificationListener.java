@@ -58,6 +58,7 @@ public class DeploymentNotificationListener implements NotificationListener {
 					notifyAll();
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.645</version><!-- which version of Jenkins is this plugin built against? -->
+        <version>2.32</version><!-- which version of Jenkins is this plugin built against? -->
     </parent>
 
     <artifactId>websphere-deployer</artifactId>
@@ -188,6 +188,7 @@
                 <artifactId>maven-hpi-plugin</artifactId>
                 <configuration>
                     <pluginFirstClassLoader>true</pluginFirstClassLoader>
+                    <disabledTestInjection>true</disabledTestInjection>
                 </configuration>
             </plugin>
         </plugins>
@@ -215,4 +216,7 @@
         </pluginRepository>
     </pluginRepositories>
 
-    </project>
+    <properties>
+    	<jenkins.version>2.30</jenkins.version>
+    </properties>
+</project>
