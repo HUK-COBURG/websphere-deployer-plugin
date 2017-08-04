@@ -1,6 +1,14 @@
-language: java
 sudo: false
-script: mvn compile -PBUILD
+
+dist: trusty
+
+language: java
+
+jdk: 
+  - oraclejdk8 
+
+script:
+  - "mvn compile -PBUILD"
 
 notifications: 
   email:
