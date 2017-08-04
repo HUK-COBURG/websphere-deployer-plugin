@@ -1,6 +1,6 @@
 language: java
 sudo: false
-script: mvn validate
+script: mvn compile -PBUILD
 
 notifications: 
   email:
