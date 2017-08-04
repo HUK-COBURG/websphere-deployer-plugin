@@ -19,11 +19,10 @@ import hudson.model.BuildListener;
  * The listener interface for receiving deploymentNotification events. The class
  * that is interested in processing a deploymentNotification event implements
  * this interface, and the object created with that class is registered with a
- * component using the component's <code>addDeploymentNotificationListener<code>
- * method. When the deploymentNotification event occurs, that object's
- * appropriate method is invoked.
+ * component using the component's addDeploymentNotificationListener method.
+ * When the deploymentNotification event occurs, that object's appropriate
+ * method is invoked.
  *
- * @see DeploymentNotificationEvent
  */
 public class DeploymentNotificationListener implements NotificationListener {
 
